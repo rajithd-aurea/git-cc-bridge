@@ -1,0 +1,60 @@
+#####################################################################
+# Sample CC CM API Demo properties file
+#####################################################################
+
+# CM Server URL
+serverUrl = http://taranis.ber.office.redknee.com:16080/ccrc
+
+# Temporary directory for creating web views, etc.
+tempDir = /Users/rajith/projects/crossover/redknee/clearcase_path
+
+# Your OS login name on CM Server
+loginName = rdelanth
+
+# Your OS login domain on CM Server
+# Typically required for Windows server but not Unix
+loginDomain =
+
+# Your OS password on CM Server
+password =
+
+# Your ClearCase primary group on CM Server
+# Optional - only needed if your ClearCase primary group is
+#            different from your default OS primary group
+#primaryGroup = <my-primary-group>
+
+# Your ClearQuest login name on CM Server
+# Optional - only needed for ClearQuest-enabled UCM operations
+#cqLoginName = <my-cq-login-name>
+
+# Your ClearQuest password on CM Server
+# Optional - only needed for ClearQuest-enabled UCM operations
+#cqPassword = <my-cq-password>
+
+# Your HTTP proxy login name
+# Optional - only needed when using an authenticating HTTP proxy
+#            to connect to the CM Server
+#httpProxyLoginName = <my-http-proxy-login-name>
+
+# Your HTTP proxy password
+# Optional - only needed when using an authenticating HTTP proxy
+#            to connect to the CM Server
+#httpProxyPassword = <my-http-proxy-password>
+
+# HTTP proxy host name
+# Optional - only needed when using a forward (explicit) HTTP proxy
+#            to connect to the CM Server
+#httpProxyHost = <http-proxy-host>
+
+# HTTP proxy port name
+# Optional - only needed when using a forward (explicit) HTTP proxy
+#            to connect to the CM Server
+#httpProxyPort = <http-proxy-port>
+
+# The demo or test VOB that is accessible from your CM server.
+# This must be a UCM project VOB in order for the UCM-related demo
+# programs to work correctly.
+# The CC CM API demo programs will be creating, modifying, and deleting
+# resources in this VOB, so do not use a VOB that contains important
+# production data.
+demoUcmProjectVob = /vobs/blr/test
