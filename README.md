@@ -1,44 +1,40 @@
 # Use cases
+
+```
+Common Command pattern
+"/usr/atria/bin/cleartool setview -exec \" $ \" <view_name>"
+```
+
 1. Checkout a file
 ```
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc test.txt \" rdelantha"
+$=cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc test.txt
 ```
 
 2. Undo checkout a file
 ```
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool uncheckout -rm test.txt \" rdelantha"
+$=cd /vobs/blr/test && /usr/atria/bin/cleartool uncheckout -rm test.txt
 ```
 
 3. Checkin a file with comments
 ```
-Checkout the file
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc test.txt \" rdelantha"
-```
-```
-Update test.txt content - should not be same as previous
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && echo 'automate' > test.txt \" rdelantha"
-```
-```
-Checkin the file
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool ci -c 'Automate Comment' test.txt \" rdelantha"
+$=cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc test.txt && echo 'automate' > test.txt && /usr/atria/bin/cleartool ci -c 'Automate Comment' test.txt
 ```
 
 4. Create a new file
 ```
-Checkout the dir
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc . \" rdelantha"
-```
-```
-Create new file , add content and checkin
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool mkelem -c 'new file' auto1.txt && echo 'automate' > auto1.txt && /usr/atria/bin/cleartool ci -c 'Automate comment' auto1.txt  \" rdelantha"
-```
-```
-Checkin dir
-"/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool ci -c 'Automate Comment' . \" rdelantha"
+$=cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc . && /usr/atria/bin/cleartool mkelem -c 'new file' auto1.txt && echo 'automate' > auto1.txt && /usr/atria/bin/cleartool ci -c 'Automate comment' auto1.txt && /usr/atria/bin/cleartool ci -c 'Automate Comment' .
 ```
 
-5. Create set of new files with directory
-6. Create a branch
-7. Create a label 
-8. Create a label and attach that to set of files
-9. Mastership change
+5. Create set of new files
+6. Create a new directory
+7. Remove files
+8. Remove directory
+9. Create a branch
+```
+$=cd /vobs/blr/test && /usr/atria/bin/cleartool mkbrtype <branch name> && /usr/atria/bin/cleartool mkbranch <branch name> <file_with_version@@/main/181>
+```
+
+10. Create a label
+11. Create a label and attach that to set of files
+12. Mastership change
+
