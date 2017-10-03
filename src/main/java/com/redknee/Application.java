@@ -1,19 +1,17 @@
 package com.redknee;
 
-import com.jcraft.jsch.JSchException;
-import com.redknee.cc.ClearCaseCmdCommand;
-import com.redknee.cc.ClearCaseCommand;
-import java.io.IOException;
+import com.redknee.rest.dto.EventDto;
+import com.redknee.service.EventHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class Application {
 
-	public static void main(String[] args) throws Exception {
-		ClearCaseCmdCommand clearCaseCommand = new ClearCaseCmdCommand();
-		clearCaseCommand.checkout();
-
-//		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) throws Exception {
+        ConfigurableApplicationContext run = SpringApplication.run(Application.class, args);
+        EventHandler bean = run.getBean(EventHandler.class);
+        bean.handleMessage(new EventDto());
+    }
 }
