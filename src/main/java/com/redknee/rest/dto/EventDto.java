@@ -25,6 +25,7 @@ public class EventDto {
         private String id;
         private String treeId;
         private String url;
+        private String message;
         private User author;
         private User committer;
         private List<String> added;

@@ -11,6 +11,10 @@ application:
   clear-case:
     view-name: rdelantha
     server:
-      ip:
+      hostname:
       username:
       password:
+  git-server:
+    username:
+    password:
+    workspace: /tmp/

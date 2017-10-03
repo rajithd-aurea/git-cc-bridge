@@ -1,4 +1,4 @@
-package com.redknee;
+package com.redknee.external;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
@@ -15,19 +15,25 @@ public class SshConnectionManager {
 
     private static Session session;
     private static ChannelShell channel;
-    private static String username = "rdelanth";
-    private static String password = "";
-    private static String hostname = "10.44.11.163";
 
+    private final String username;
+    private final String password;
+    private final String hostname;
 
-    private static Session getSession() {
+    public SshConnectionManager(String username, String password, String hostname) {
+        this.username = username;
+        this.password = password;
+        this.hostname = hostname;
+    }
+
+    private Session getSession() {
         if (session == null || !session.isConnected()) {
             session = connect(hostname, username, password);
         }
         return session;
     }
 
-    private static Channel getChannel() {
+    private Channel getChannel() {
         if (channel == null || !channel.isConnected()) {
             try {
                 channel = (ChannelShell) getSession().openChannel("shell");
@@ -63,7 +69,7 @@ public class SshConnectionManager {
 
     }
 
-    private static void executeCommands(List<String> commands) {
+    public void executeCommands(List<String> commands) {
         try {
             Channel channel = getChannel();
 
@@ -149,8 +155,8 @@ public class SshConnectionManager {
         //checkin dir
         commands.add(
                 "/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool ci -c 'Automate Comment' . \" rdelantha");
-        executeCommands(commands);
-        close();
+//        executeCommands(commands);
+//        close();
     }
 
 }

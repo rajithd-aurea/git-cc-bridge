@@ -16,6 +16,7 @@ public class ApplicationProperty {
 
     private Map<String, String> pathMapper;
     private ClearCase clearCase;
+    private GitServer gitServer;
 
     @Getter
     @Setter
@@ -29,9 +30,18 @@ public class ApplicationProperty {
     @Setter
     public static class Server {
 
-        private String ip;
+        private String hostname;
         private String username;
         private String password;
+    }
+
+    @Getter
+    @Setter
+    public static class GitServer {
+
+        private String username;
+        private String password;
+        private String workspace;
     }
 
 }
