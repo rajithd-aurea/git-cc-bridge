@@ -4,3 +4,6 @@
 4. Create global view with ssh creds
 5. add logs
 6. If possible use sqs queue instead of web link
+7. copy file - remote directory should be property created
+8. error handling - roll back changes
+9. add top level file

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class EventHandler {
@@ -30,20 +31,22 @@ public class EventHandler {
         Repository repository = event.getRepository();
         publisher.publishEvent(new ValidationEvent(event));
         publisher.publishEvent(new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId()));
-        if (isModifyFilesExists(event)) {
-            publisher.publishEvent(new ModifyElementEvent(event));
-        }
-
-    }
-
-    private boolean isModifyFilesExists(EventDto event) {
         List<Commit> commits = event.getCommits();
         for (Commit commit : commits) {
             List<String> modified = commit.getModified();
-            if (!modified.isEmpty()) {
-                return true;
+            if (!CollectionUtils.isEmpty(modified)) {
+                publisher.publishEvent(
+                        new ModifyElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
+                                attachCommitIdToMessage(commit), modified));
             }
         }
-        return false;
+
+
     }
+
+    private String attachCommitIdToMessage(Commit commit) {
+        return commit.getMessage() + " - " + commit.getId();
+    }
+
+
 }

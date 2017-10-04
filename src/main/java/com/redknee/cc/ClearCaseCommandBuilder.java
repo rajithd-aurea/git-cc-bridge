@@ -6,7 +6,7 @@ public class ClearCaseCommandBuilder {
 
     private static final String CHECK_OUT_COMMAND = "cd %s && /usr/atria/bin/cleartool checkout -reserved -nc %s";
 
-    private static final String CHECK_IN_COMMAND = "cd %s && /usr/atria/bin/cleartool ci -c '%s' %s";
+    private static final String CHECK_IN_COMMAND = "cd %s && /usr/atria/bin/cleartool ci -c '%s' -ide %s";
 
     private static final String COPY_FILE_COMMAND = "cp %s %s";
 

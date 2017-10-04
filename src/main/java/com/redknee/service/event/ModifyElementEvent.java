@@ -1,6 +1,6 @@
 package com.redknee.service.event;
 
-import com.redknee.rest.dto.EventDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ModifyElementEvent {
 
-    private EventDto event;
+    private String repoFullName;
+    private String repoName;
+    private String repoId;
+    private String commitMessage;
+    private List<String> modifiedFiles;
 
 }
