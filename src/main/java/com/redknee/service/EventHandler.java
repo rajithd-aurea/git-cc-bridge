@@ -3,6 +3,7 @@ package com.redknee.service;
 import com.redknee.rest.dto.EventDto;
 import com.redknee.rest.dto.EventDto.Commit;
 import com.redknee.rest.dto.EventDto.Repository;
+import com.redknee.service.event.AddElementEvent;
 import com.redknee.service.event.ModifyElementEvent;
 import com.redknee.service.event.SourceCodeEvent;
 import com.redknee.service.event.ValidationEvent;
@@ -42,6 +43,12 @@ public class EventHandler {
                 publisher.publishEvent(
                         new ModifyElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
                                 attachCommitIdToMessage(commit), modified));
+            }
+
+            if (!CollectionUtils.isEmpty(commit.getAdded())) {
+                publisher.publishEvent(
+                        new AddElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
+                                attachCommitIdToMessage(commit), commit.getAdded()));
             }
         }
 
