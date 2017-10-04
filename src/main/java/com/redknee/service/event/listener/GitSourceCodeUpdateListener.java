@@ -7,6 +7,7 @@ import com.redknee.service.exception.ApiException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
@@ -18,6 +19,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class GitSourceCodeUpdateListener {
 
@@ -34,7 +36,9 @@ public class GitSourceCodeUpdateListener {
         CredentialsProvider credentials = gitServer.getUsername() != null && gitServer.getPassword() != null
                 ? new UsernamePasswordCredentialsProvider(gitServer.getUsername(), gitServer.getPassword()) : null;
         try {
+            log.info("Checking git directory exists for repo name {}", sourceCode.getRepoName());
             if (isDirectoryExists(dirPath)) {
+                log.info("Directory exists for repo {} and start pulling from git", sourceCode.getRepoName());
                 Git git = Git.open(new File(dirPath));
                 PullCommand pullCommand = git.pull();
                 if (credentials != null) {
@@ -42,8 +46,10 @@ public class GitSourceCodeUpdateListener {
                 }
                 PullResult pullResult = pullCommand.call();
                 Collection<TrackingRefUpdate> updates = pullResult.getFetchResult().getTrackingRefUpdates();
+                log.info("Updates found {}", updates.size());
                 git.close();
             } else {
+                log.info("Directory not exists. Start cloning the repo {}", sourceCode.getRepoName());
                 CloneCommand cloneCommand = Git.cloneRepository()
                         .setURI(sourceCode.getUrl()).setDirectory(new File(dirPath));
                 if (credentials != null) {
@@ -53,7 +59,7 @@ public class GitSourceCodeUpdateListener {
                 git.close();
             }
         } catch (GitAPIException | IOException e) {
-            throw new ApiException();
+            throw new ApiException("[Git sync failed]: Error occur while getting update from git", e);
         }
     }
 

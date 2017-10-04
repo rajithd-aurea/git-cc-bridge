@@ -13,8 +13,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 public class SshConnectionManager {
 
     private final String username;
@@ -44,7 +46,7 @@ public class SshConnectionManager {
                 channel.connect();
 
             } catch (Exception e) {
-                System.out.println("Error while opening channel: " + e);
+                log.error("Error while opening channel: ", e);
             }
         }
         return channel;
@@ -59,11 +61,11 @@ public class SshConnectionManager {
             session.setConfig(config);
             session.setPassword(password);
 
-            System.out.println("Connecting SSH to " + hostname + " - Please wait for few seconds... ");
+            log.info("Connecting SSH to {} - Please wait for few seconds... ", hostname);
             session.connect();
-            System.out.println("Connected!");
+            log.info("Connected!");
         } catch (Exception e) {
-            System.out.println("An error occurred while connecting to " + hostname + ": " + e);
+            log.error("An error occurred while connecting to " + hostname + ": " + e);
         }
 
         return session;
@@ -73,15 +75,11 @@ public class SshConnectionManager {
     public void executeCommands(List<String> commands) {
         try {
             Channel channel = getShellChannel();
-
-            System.out.println("Sending commands...");
             sendCommands(channel, commands);
-
             readChannelOutput(channel);
-            System.out.println("Finished sending commands!");
-
+            log.info("Finished sending commands!");
         } catch (Exception e) {
-            System.out.println("An error ocurred during executeCommands: " + e);
+            log.error("An error ocurred during executeCommands: " + e);
         }
     }
 
@@ -216,7 +214,7 @@ public class SshConnectionManager {
 
             out.flush();
         } catch (Exception e) {
-            System.out.println("Error while sending commands: " + e);
+            log.error("Error while sending commands: ", e);
         }
 
     }
@@ -234,7 +232,7 @@ public class SshConnectionManager {
                         break;
                     }
                     line = new String(buffer, 0, i);
-                    System.out.println(line);
+                    log.info(line);
                 }
 
                 if (line.contains("logout")) {
@@ -250,7 +248,7 @@ public class SshConnectionManager {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error while reading channel output: " + e);
+            log.error("Error while reading channel output: ", e);
         }
 
     }
@@ -258,28 +256,6 @@ public class SshConnectionManager {
     public void close() {
         channel.disconnect();
         session.disconnect();
-        System.out.println("Disconnected channel and session");
+        log.info("Disconnected channel and session");
     }
-
-
-    public static void main(String[] args) {
-//        List<String> commands = new ArrayList<String>();
-//        //checkout dir
-//        commands.add(
-//                "/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool checkout -reserved -nc . \" rdelantha");
-//
-//        //create new file , add content and checkin
-//        commands.add(
-//                "/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool mkelem -c 'new file' auto1.txt && echo 'automate' > auto1.txt && /usr/atria/bin/cleartool ci -c 'Automate comment' auto1.txt  \" rdelantha");
-//
-//        //checkin dir
-//        commands.add(
-//                "/usr/atria/bin/cleartool setview -exec \"cd /vobs/blr/test && /usr/atria/bin/cleartool ci -c 'Automate Comment' . \" rdelantha");
-//        executeCommands(commands);
-//        close();
-        SshConnectionManager sshConnectionManager = new SshConnectionManager("rdelanth", "",
-                "10.44.11.163");
-        sshConnectionManager.copyFile("/Users/rajith/Desktop/abc.txt", "/tmp/abc/abc.txt");
-    }
-
 }

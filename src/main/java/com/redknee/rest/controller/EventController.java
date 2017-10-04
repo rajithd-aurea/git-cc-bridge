@@ -21,9 +21,6 @@ public class EventController {
     @PostMapping(path = "/bridge/event", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void receiveEvent(@RequestBody EventDto event) {
         log.info("========== Receive event ===================");
-        log.info("Body ==> {}", event);
         eventHandler.handleMessage(event);
     }
-
-
 }
