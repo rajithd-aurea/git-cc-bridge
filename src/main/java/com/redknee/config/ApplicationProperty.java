@@ -33,6 +33,7 @@ public class ApplicationProperty {
         private String hostname;
         private String username;
         private String password;
+        private String workspace;
     }
 
     @Getter

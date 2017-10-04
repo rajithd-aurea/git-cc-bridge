@@ -1,0 +1,6 @@
+1. Test cases
+2. SshConnectionManager spring
+3. Deployment
+4. Create global view with ssh creds
+5. add logs
+6. If possible use sqs queue instead of web link

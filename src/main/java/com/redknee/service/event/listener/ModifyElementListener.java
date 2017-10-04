@@ -6,7 +6,6 @@ import com.redknee.config.ApplicationProperty;
 import com.redknee.rest.dto.EventDto;
 import com.redknee.rest.dto.EventDto.Commit;
 import com.redknee.service.event.ModifyElementEvent;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.context.event.EventListener;
@@ -35,15 +34,30 @@ public class ModifyElementListener {
                 // checkout command
                 String checkOutCommand = ClearCaseCommandBuilder.buildCheckOutCommand(viewName, vobPath, ele);
                 clearCaseCommandExecutor.executeCommand(Collections.singletonList(checkOutCommand));
-                // copy file
+
+                // copy file to /tmp
+                String localFile = buildDirPath(event) + "/" + ele;
+                String[] fileParts = ele.split("/");
+                String remoteFile =
+                        applicationProperty.getClearCase().getServer().getWorkspace() + fileParts[fileParts.length - 1];
+                clearCaseCommandExecutor.copyFile(localFile, remoteFile);
+
+                // copy file from /tmp to view
+                String destinationFile = vobPath + ele;
+                String copyCommand = ClearCaseCommandBuilder.buildCopyCommand(viewName, remoteFile, destinationFile);
+                clearCaseCommandExecutor.executeCommand(Collections.singletonList(copyCommand));
 
                 // checkin command
+                String checkInCommand = ClearCaseCommandBuilder
+                        .buildCheckInCommand(viewName, vobPath, ele, commit.getMessage());
+                clearCaseCommandExecutor.executeCommand(Collections.singletonList(checkInCommand));
 
             });
-//            modifiedElements.stream()
-//                    .forEach(ele -> clearCaseExecutor.modifyElement(vobPath, ele, commit.getMessage()));
         }
     }
 
-
+    private String buildDirPath(EventDto event) {
+        String workspace = applicationProperty.getGitServer().getWorkspace();
+        return workspace + event.getRepository().getName() + "-" + event.getRepository().getId();
+    }
 }

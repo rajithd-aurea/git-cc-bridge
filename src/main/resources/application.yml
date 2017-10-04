@@ -14,6 +14,7 @@ application:
       hostname:
       username:
       password:
+      workspace: /tmp/
   git-server:
     username:
     password:

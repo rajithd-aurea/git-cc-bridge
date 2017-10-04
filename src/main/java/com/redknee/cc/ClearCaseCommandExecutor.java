@@ -20,7 +20,14 @@ public class ClearCaseCommandExecutor {
         SshConnectionManager sshConnectionManager = new SshConnectionManager(server.getUsername(), server.getPassword(),
                 server.getHostname());
         sshConnectionManager.executeCommands(commands);
+        sshConnectionManager.close();
+    }
 
+    public void copyFile(String sourceFile, String destinationFile) {
+        Server server = applicationProperty.getClearCase().getServer();
+        SshConnectionManager sshConnectionManager = new SshConnectionManager(server.getUsername(), server.getPassword(),
+                server.getHostname());
+        sshConnectionManager.copyFile(sourceFile, destinationFile);
     }
 
 }
