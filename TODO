@@ -7,3 +7,4 @@
 7. copy file - remote directory should be property created
 8. error handling - roll back changes
 9. add top level file
+10. automated deployment - jenkins
