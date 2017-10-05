@@ -26,6 +26,8 @@ public class AddElementListener {
 
     @EventListener
     public void handle(AddElementEvent event) {
+        //TODO use clearfsimport
+        // Onhold
         String vobPath = applicationProperty.getPathMapper().get(event.getRepoFullName());
         log.info("Found VOB path {}", vobPath);
         String viewName = applicationProperty.getClearCase().getViewName();

@@ -12,6 +12,8 @@ public class ClearCaseCommandBuilder {
 
     private static final String MK_ELEM_COMMAND = "cd %s && /usr/atria/bin/cleartool mkelem -c '%s' %s";
 
+    private static final String MK_DIR_COMMAND = "cd %s && /usr/atria/bin/cleartool mkdir -c '%s' %s";
+
     public static String buildCheckOutCommand(String viewName, String path, String fileName) {
         String checkoutCommand = String.format(CHECK_OUT_COMMAND, path, fileName);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, checkoutCommand, viewName);
@@ -30,5 +32,10 @@ public class ClearCaseCommandBuilder {
     public static String buildMakeElementCommand(String viewName, String path, String commitMessage, String fileName) {
         String makeElementCommand = String.format(MK_ELEM_COMMAND, path, commitMessage, fileName);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, makeElementCommand, viewName);
+    }
+
+    public static String buildMakeDirCommand(String viewName, String path, String commitMessage, String dirName) {
+        String makeDirCommand = String.format(MK_DIR_COMMAND, path, commitMessage, dirName);
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, makeDirCommand, viewName);
     }
 }
