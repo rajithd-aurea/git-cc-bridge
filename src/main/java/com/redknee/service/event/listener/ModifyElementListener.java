@@ -3,6 +3,7 @@ package com.redknee.service.event.listener;
 import com.redknee.cc.ClearCaseCommandBuilder;
 import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
+import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.external.LinuxCommandBuilder;
 import com.redknee.service.event.ModifyElementEvent;
 import java.util.Arrays;
@@ -18,15 +19,18 @@ public class ModifyElementListener {
 
     private final ApplicationProperty applicationProperty;
     private final ClearCaseCommandExecutor clearCaseCommandExecutor;
+    private final ClearCaseVobMapper clearCaseVobMapper;
 
-    ModifyElementListener(ApplicationProperty applicationProperty, ClearCaseCommandExecutor clearCaseCommandExecutor) {
+    ModifyElementListener(ApplicationProperty applicationProperty, ClearCaseCommandExecutor clearCaseCommandExecutor,
+            ClearCaseVobMapper clearCaseVobMapper) {
         this.applicationProperty = applicationProperty;
         this.clearCaseCommandExecutor = clearCaseCommandExecutor;
+        this.clearCaseVobMapper = clearCaseVobMapper;
     }
 
     @EventListener
     public void handle(ModifyElementEvent element) {
-        String vobPath = applicationProperty.getPathMapper().get(element.getRepoFullName());
+        String vobPath = clearCaseVobMapper.getPathMapper().get(element.getRepoFullName());
         log.info("Found VOB path {}", vobPath);
         String viewName = applicationProperty.getClearCase().getViewName();
         List<String> modifiedFiles = element.getModifiedFiles();

@@ -8,3 +8,4 @@
 8. error handling - roll back changes
 9. add top level file
 10. automated deployment - jenkins
+11. handle file rename

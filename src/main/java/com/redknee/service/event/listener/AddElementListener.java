@@ -3,6 +3,7 @@ package com.redknee.service.event.listener;
 import com.redknee.cc.ClearCaseCommandBuilder;
 import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
+import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.service.event.AddElementEvent;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,19 +17,21 @@ import org.springframework.stereotype.Service;
 public class AddElementListener {
 
     private final ApplicationProperty applicationProperty;
+    private final ClearCaseVobMapper clearCaseVobMapper;
     private final ClearCaseCommandExecutor clearCaseCommandExecutor;
 
     public AddElementListener(ApplicationProperty applicationProperty,
-            ClearCaseCommandExecutor clearCaseCommandExecutor) {
+            ClearCaseCommandExecutor clearCaseCommandExecutor, ClearCaseVobMapper clearCaseVobMapper) {
         this.applicationProperty = applicationProperty;
         this.clearCaseCommandExecutor = clearCaseCommandExecutor;
+        this.clearCaseVobMapper = clearCaseVobMapper;
     }
 
     @EventListener
     public void handle(AddElementEvent event) {
         //TODO use clearfsimport
         // Onhold
-        String vobPath = applicationProperty.getPathMapper().get(event.getRepoFullName());
+        String vobPath = clearCaseVobMapper.getPathMapper().get(event.getRepoFullName());
         log.info("Found VOB path {}", vobPath);
         String viewName = applicationProperty.getClearCase().getViewName();
         List<String> newFiles = event.getNewFiles();

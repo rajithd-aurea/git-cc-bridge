@@ -1,6 +1,5 @@
 package com.redknee.config;
 
-import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ApplicationProperty {
 
-    private Map<String, String> pathMapper;
     private ClearCase clearCase;
     private GitServer gitServer;
 

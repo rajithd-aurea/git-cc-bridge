@@ -1,0 +1,3 @@
+clearcase:
+  path-mapper:
+    rajithd-aurea/vobs_blr: /vobs/blr/

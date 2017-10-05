@@ -6,8 +6,6 @@ server:
     mime-types: application/json,application/xml,text/html,text/xml,text/plain
 
 application:
-  path-mapper:
-    rajithd-aurea/vobs_blr: /vobs/blr/
   clear-case:
     view-name: rdelantha
     server:
