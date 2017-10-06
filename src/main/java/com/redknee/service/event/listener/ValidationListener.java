@@ -1,6 +1,5 @@
 package com.redknee.service.event.listener;
 
-import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.rest.dto.EventDto;
 import com.redknee.service.event.ValidationEvent;
@@ -14,11 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ValidationListener {
 
-    private final ApplicationProperty applicationProperty;
     private final ClearCaseVobMapper clearCaseVobMapper;
 
-    ValidationListener(ApplicationProperty applicationProperty, ClearCaseVobMapper clearCaseVobMapper) {
-        this.applicationProperty = applicationProperty;
+    ValidationListener(ClearCaseVobMapper clearCaseVobMapper) {
         this.clearCaseVobMapper = clearCaseVobMapper;
     }
 
