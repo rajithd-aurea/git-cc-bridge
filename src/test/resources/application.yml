@@ -1,0 +1,19 @@
+server:
+  context-path: /api
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+application:
+  clear-case:
+    view-name:
+    server:
+      hostname:
+      username:
+      password:
+      workspace:
+  git-server:
+    username:
+    password:
+    workspace:
