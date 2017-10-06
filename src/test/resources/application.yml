@@ -7,7 +7,7 @@ server:
 
 application:
   clear-case:
-    view-name:
+    view-name: test
     server:
       hostname:
       username:
