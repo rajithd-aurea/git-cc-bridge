@@ -23,6 +23,15 @@ public class EventDto {
 
     private Repository repository;
 
+    private Boolean created;
+
+    private Boolean deleted;
+
+    private Boolean forced;
+
+    @JsonProperty("head_commit")
+    private Commit headCommit;
+
     @Getter
     @Setter
     public static class Commit {

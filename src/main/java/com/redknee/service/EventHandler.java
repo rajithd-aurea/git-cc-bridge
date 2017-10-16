@@ -4,6 +4,8 @@ import com.redknee.rest.dto.EventDto;
 import com.redknee.rest.dto.EventDto.Commit;
 import com.redknee.rest.dto.EventDto.Repository;
 import com.redknee.service.event.AddElementEvent;
+import com.redknee.service.event.LabelCreateEvent;
+import com.redknee.service.event.LabelRemoveEvent;
 import com.redknee.service.event.ModifyElementEvent;
 import com.redknee.service.event.RemoveElementEvent;
 import com.redknee.service.event.SourceCodeEvent;
@@ -11,6 +13,7 @@ import com.redknee.service.event.ValidationEvent;
 import com.redknee.util.Constants;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,10 +32,36 @@ public class EventHandler {
     @Async("eventTaskExecutor")
     public void handleMessage(EventDto event) {
         String ref = event.getRef();
-        if (!Constants.MASTER_BRANCH.equals(ref)) {
-            log.info("Event is not occurred from master branch change. Ignoring");
+        if (StringUtils.isBlank(ref)) {
+            log.warn("Ref is empty. Returning without further processing");
             return;
         }
+        log.info("Try to handle ref {}", ref);
+        if (Constants.MASTER_BRANCH.equals(ref)) {
+            handlePushCommit(event);
+        } else if (ref.startsWith(Constants.TAG_REF)) {
+            handleTagCommit(event);
+        } else {
+            log.info("Event is not occurred from master branch change. Ignoring");
+        }
+    }
+
+    private void handleTagCommit(EventDto event) {
+        String[] tagSplits = event.getRef().split("/");
+        String tag = tagSplits[tagSplits.length - 1];
+        if (event.getCreated()) {
+            // tag created
+            Commit headCommit = event.getHeadCommit();
+            publisher.publishEvent(new LabelCreateEvent(tag, event.getRepository().getFullName(), headCommit.getAdded(),
+                    headCommit.getModified()));
+        }
+        if (event.getDeleted()) {
+            // tag deleted
+            publisher.publishEvent(new LabelRemoveEvent(tag, event.getRepository().getFullName()));
+        }
+    }
+
+    private void handlePushCommit(EventDto event) {
         Repository repository = event.getRepository();
         log.info("Event occurred for master branch for repo {}", repository.getUrl());
         publisher.publishEvent(new ValidationEvent(event));
@@ -58,12 +87,10 @@ public class EventHandler {
                                 attachCommitIdToMessage(commit), commit.getRemoved()));
             }
         }
-
     }
 
     private String attachCommitIdToMessage(Commit commit) {
         return commit.getMessage() + " - " + commit.getId();
     }
-
 
 }
