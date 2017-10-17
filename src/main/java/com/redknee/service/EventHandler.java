@@ -4,6 +4,7 @@ import com.redknee.rest.dto.EventDto;
 import com.redknee.rest.dto.EventDto.Commit;
 import com.redknee.rest.dto.EventDto.Repository;
 import com.redknee.service.event.AddElementEvent;
+import com.redknee.service.event.BranchCreateEvent;
 import com.redknee.service.event.LabelCreateEvent;
 import com.redknee.service.event.LabelRemoveEvent;
 import com.redknee.service.event.ModifyElementEvent;
@@ -39,11 +40,27 @@ public class EventHandler {
         log.info("Try to handle ref {}", ref);
         if (Constants.MASTER_BRANCH.equals(ref)) {
             handlePushCommit(event);
-        } else if (ref.startsWith(Constants.TAG_REF)) {
+        } else if (ref.startsWith(Constants.TAG_REF_STARTS_WITH)) {
             handleTagCommit(event);
+        } else if (ref.startsWith(Constants.BRANCH_REF_STARTS_WITH)) {
+            handleBranchCommit(event);
         } else {
-            log.info("Event is not occurred from master branch change. Ignoring");
+            log.info("Event ref {} is not handled", ref);
         }
+    }
+
+    private void handleBranchCommit(EventDto event) {
+        String[] branchSplits = event.getRef().split("/");
+        String branch = branchSplits[branchSplits.length - 1];
+        if (event.getDeleted()) {
+            // branch deleted
+        } else {
+            Commit headCommit = event.getHeadCommit();
+            publisher.publishEvent(
+                    new BranchCreateEvent(event.getCreated(), branch, event.getRepository().getFullName(),
+                            headCommit.getAdded(), headCommit.getModified()));
+        }
+
     }
 
     private void handleTagCommit(EventDto event) {

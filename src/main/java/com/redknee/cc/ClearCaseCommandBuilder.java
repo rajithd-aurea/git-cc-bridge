@@ -24,6 +24,10 @@ public class ClearCaseCommandBuilder {
 
     private static final String REMOVE_LABEL_COMMAND = "cd %s && /usr/atria/bin/cleartool rmtype -rmall -force lbtype:%s";
 
+    private static final String CREATE_BRANCH_TYPE_COMMAND = "cd %s && /usr/atria/bin/cleartool mkbrtype -nc %s";
+
+    private static final String ASSIGN_BRANCH_TO_ELEMENTS_COMMAND = "cd %s && /usr/atria/bin/cleartool mkbranch -nc -nco %s %s";
+
     public static String buildCheckOutCommand(String viewName, String path, String fileName) {
         String checkoutCommand = String.format(CHECK_OUT_COMMAND, path, fileName);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, checkoutCommand, viewName);
@@ -67,6 +71,18 @@ public class ClearCaseCommandBuilder {
 
     public static String buildRemoveLabelCommand(String viewName, String vobPath, String labelName) {
         String command = String.format(REMOVE_LABEL_COMMAND, vobPath, labelName);
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
+    }
+
+    public static String buildCreateBranchTypeCommand(String viewName, String vobPath, String branchName) {
+        String command = String.format(CREATE_BRANCH_TYPE_COMMAND, vobPath, branchName);
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
+    }
+
+    public static String buildAssignBranchToElementsCommand(String viewName, String vobPath, String branchName,
+            String... fileNames) {
+        String command = String
+                .format(ASSIGN_BRANCH_TO_ELEMENTS_COMMAND, vobPath, branchName, StringUtils.join(fileNames, " "));
         return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
     }
 }
