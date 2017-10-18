@@ -50,3 +50,10 @@ jacocoTestReport {
         })
     }
 }
+
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco-ut/jacoco-ut.exec")
+    }
+}
