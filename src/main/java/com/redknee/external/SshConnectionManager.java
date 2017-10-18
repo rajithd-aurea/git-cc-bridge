@@ -207,9 +207,7 @@ public class SshConnectionManager {
             PrintStream out = new PrintStream(channel.getOutputStream());
 
             out.println("#!/bin/bash");
-            for (String command : commands) {
-                out.println(command);
-            }
+            commands.forEach(out::println);
             out.println("exit");
 
             out.flush();

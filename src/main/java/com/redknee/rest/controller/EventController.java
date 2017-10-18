@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -19,8 +20,9 @@ public class EventController {
     }
 
     @PostMapping(path = "/bridge/event", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void receiveEvent(@RequestBody EventDto event) {
+    public void receiveEvent(@RequestBody EventDto event, @RequestHeader("X-GitHub-Delivery") String deliveryId) {
         log.info("========== Receive event ===================");
+        log.info("Delivery id {}", deliveryId);
         eventHandler.handleMessage(event);
     }
 }
