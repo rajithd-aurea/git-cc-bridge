@@ -12,7 +12,6 @@ import com.redknee.service.event.RemoveElementEvent;
 import com.redknee.service.event.SourceCodeEvent;
 import com.redknee.service.event.ValidationEvent;
 import com.redknee.util.Constants;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -58,14 +57,11 @@ public class EventHandler {
         String[] branchSplits = event.getRef().split("/");
         String branch = branchSplits[branchSplits.length - 1];
         if (!event.getDeleted()) {
-            Commit headCommit = event.getHeadCommit();
-            List<String> files = new ArrayList<>();
-            files.addAll(headCommit.getAdded());
-            files.addAll(headCommit.getModified());
-            publisher.publishEvent(
+            List<Commit> commits = event.getCommits();
+            commits.forEach(commit -> publisher.publishEvent(
                     new BranchCreateEvent(event.getCreated(), branch, repository.getFullName(),
                             repository.getName(), repository.getId(), event.getDeliveryId(),
-                            attachCommitIdToMessage(headCommit), files));
+                            attachCommitIdToMessage(commit), commit.getAdded(), commit.getModified())));
         }
     }
 

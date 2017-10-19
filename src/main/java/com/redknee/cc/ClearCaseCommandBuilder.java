@@ -22,7 +22,11 @@ public class ClearCaseCommandBuilder {
 
     private static final String ASSIGN_BRANCH_TO_ELEMENTS_COMMAND = "cd %s && /usr/atria/bin/cleartool mkbranch -nc -nco %s %s";
 
+    private static final String ASSIGN_BRANCH_TO_ELEMENTS_COMMAND_WITH_CO = "cd %s && /usr/atria/bin/cleartool mkbranch -nc %s %s";
+
     private static final String CREATE_NEW_FILES_AND_DIRS_COMMAND = "cd %s && /usr/atria/bin/clearfsimport -comment '%s' -rec -nset %s .";
+
+    private static final String COPY_FILE = "cp %s %s";
 
     public static String buildCheckOutCommand(String viewName, String path, String fileName) {
         String checkoutCommand = String.format(CHECK_OUT_COMMAND, path, fileName);
@@ -70,6 +74,17 @@ public class ClearCaseCommandBuilder {
             String... fileNames) {
         String command = String
                 .format(ASSIGN_BRANCH_TO_ELEMENTS_COMMAND, vobPath, branchName, StringUtils.join(fileNames, " "));
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
+    }
+
+    public static String buildAssignBranchToElementsWithCoCommand(String viewName, String vobPath, String branchName,
+            String fileName) {
+        String command = String.format(ASSIGN_BRANCH_TO_ELEMENTS_COMMAND_WITH_CO, vobPath, branchName, fileName);
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
+    }
+
+    public static String buildCopyCommand(String viewName, String sourceFile, String destinationFile) {
+        String command = String.format(COPY_FILE, sourceFile, destinationFile);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
     }
 }

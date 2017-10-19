@@ -10,7 +10,7 @@ import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.service.event.BranchCreateEvent;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,10 +46,10 @@ public class BranchCreateListenerTest {
                 clearCaseCommandExecutor);
         listener.handleBranchCreateEvent(
                 new BranchCreateEvent(true, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
-                        Arrays.asList("add.txt", "modify.txt")));
-        verify(clearCaseCommandExecutor, times(5)).executeCommand(commandArgumentCaptor.capture());
+                        Collections.singletonList("add.txt"), Collections.singletonList("modify.txt")));
+        verify(clearCaseCommandExecutor, times(9)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(5, allValues.size());
+        assertEquals(9, allValues.size());
     }
 
     @Test
@@ -60,9 +60,9 @@ public class BranchCreateListenerTest {
                 clearCaseCommandExecutor);
         listener.handleBranchCreateEvent(
                 new BranchCreateEvent(false, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
-                        Arrays.asList("add.txt", "modify.txt")));
-        verify(clearCaseCommandExecutor, times(4)).executeCommand(commandArgumentCaptor.capture());
+                        Collections.singletonList("add.txt"), Collections.singletonList("modify.txt")));
+        verify(clearCaseCommandExecutor, times(8)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(4, allValues.size());
+        assertEquals(8, allValues.size());
     }
 }
