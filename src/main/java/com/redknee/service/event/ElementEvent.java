@@ -1,5 +1,6 @@
 package com.redknee.service.event;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,12 +10,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SourceCodeEvent {
+public class ElementEvent {
 
-    private String url;
+    private String repoFullName;
     private String repoName;
-    private String id;
-    private String branchName;
-
+    private String repoId;
+    private String deliveryId;
+    private String commitMessage;
+    private List<String> files;
 
 }

@@ -12,6 +12,7 @@ import com.redknee.service.event.RemoveElementEvent;
 import com.redknee.service.event.SourceCodeEvent;
 import com.redknee.service.event.ValidationEvent;
 import com.redknee.util.Constants;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -50,17 +51,26 @@ public class EventHandler {
     }
 
     private void handleBranchCommit(EventDto event) {
+        Repository repository = event.getRepository();
+        publisher.publishEvent(new ValidationEvent(event));
+        publisher.publishEvent(
+                new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId(), event.getRef()));
         String[] branchSplits = event.getRef().split("/");
         String branch = branchSplits[branchSplits.length - 1];
         if (!event.getDeleted()) {
             Commit headCommit = event.getHeadCommit();
+            List<String> files = new ArrayList<>();
+            files.addAll(headCommit.getAdded());
+            files.addAll(headCommit.getModified());
             publisher.publishEvent(
-                    new BranchCreateEvent(event.getCreated(), branch, event.getRepository().getFullName(),
-                            headCommit.getAdded(), headCommit.getModified()));
+                    new BranchCreateEvent(event.getCreated(), branch, repository.getFullName(),
+                            repository.getName(), repository.getId(), event.getDeliveryId(),
+                            attachCommitIdToMessage(headCommit), files));
         }
     }
 
     private void handleTagCommit(EventDto event) {
+        publisher.publishEvent(new ValidationEvent(event));
         String[] tagSplits = event.getRef().split("/");
         String tag = tagSplits[tagSplits.length - 1];
         if (event.getCreated()) {
@@ -79,14 +89,16 @@ public class EventHandler {
         Repository repository = event.getRepository();
         log.info("Event occurred for master branch for repo {}", repository.getUrl());
         publisher.publishEvent(new ValidationEvent(event));
-        publisher.publishEvent(new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId()));
+        publisher.publishEvent(
+                new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId(), event.getRef()));
+
         List<Commit> commits = event.getCommits();
         for (Commit commit : commits) {
             List<String> modified = commit.getModified();
             if (!CollectionUtils.isEmpty(modified)) {
                 publisher.publishEvent(
                         new ModifyElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
-                                attachCommitIdToMessage(commit), modified));
+                                event.getDeliveryId(), attachCommitIdToMessage(commit), modified));
             }
 
             if (!CollectionUtils.isEmpty(commit.getAdded())) {

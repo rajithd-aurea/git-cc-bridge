@@ -54,6 +54,7 @@ public class EventControllerTest {
     @Test
     public void testReceiveEvent() throws Exception {
         mockMvc.perform(post("/bridge/event").content(FileUtils.readFileToString(new File(EVENT_MESSAGE),
-                Charset.defaultCharset())).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                Charset.defaultCharset())).header("X-GitHub-Delivery", "123").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
