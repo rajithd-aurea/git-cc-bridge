@@ -44,6 +44,7 @@ public class GitSourceCodeUpdateListener {
                 if (credentials != null) {
                     pullCommand.setCredentialsProvider(credentials);
                 }
+                pullCommand.setRemoteBranchName(sourceCode.getBranchName());
                 PullResult pullResult = pullCommand.call();
                 Collection<TrackingRefUpdate> updates = pullResult.getFetchResult().getTrackingRefUpdates();
                 log.info("Updates found {}", updates.size());
@@ -51,7 +52,8 @@ public class GitSourceCodeUpdateListener {
             } else {
                 log.info("Directory not exists. Start cloning the repo {}", sourceCode.getRepoName());
                 CloneCommand cloneCommand = Git.cloneRepository()
-                        .setURI(sourceCode.getUrl()).setDirectory(new File(dirPath));
+                        .setURI(sourceCode.getUrl()).setDirectory(new File(dirPath))
+                        .setBranch(sourceCode.getBranchName());
                 if (credentials != null) {
                     cloneCommand.setCredentialsProvider(credentials);
                 }

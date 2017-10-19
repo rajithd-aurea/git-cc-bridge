@@ -5,7 +5,6 @@ import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.service.event.BranchCreateEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,24 +15,20 @@ import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Service
-public class BranchCreateListener {
+public class BranchCreateListener extends AbstractListener {
 
-    private final ClearCaseVobMapper clearCaseVobMapper;
-    private final ApplicationProperty applicationProperty;
     private final ClearCaseCommandExecutor clearCaseCommandExecutor;
 
     BranchCreateListener(ClearCaseVobMapper clearCaseVobMapper,
             ApplicationProperty applicationProperty, ClearCaseCommandExecutor clearCaseCommandExecutor) {
-        this.clearCaseVobMapper = clearCaseVobMapper;
-        this.applicationProperty = applicationProperty;
+        super(applicationProperty, clearCaseVobMapper, clearCaseCommandExecutor);
         this.clearCaseCommandExecutor = clearCaseCommandExecutor;
     }
 
     @EventListener
     public void handleBranchCreateEvent(BranchCreateEvent event) {
-        String vobPath = clearCaseVobMapper.getPathMapper().get(event.getRepoFullName());
-        log.info("Found VOB path {}", vobPath);
-        String viewName = applicationProperty.getClearCase().getViewName();
+        String vobPath = getVobPath(event.getRepoFullName());
+        String viewName = getViewName();
         String branch = event.getBranch();
         if (event.isNew()) {
             // branch is new. Create branch type
@@ -42,13 +37,11 @@ public class BranchCreateListener {
             log.info("Create branch type command : {}", branchTypeCommand);
             clearCaseCommandExecutor.executeCommand(Collections.singletonList(branchTypeCommand));
         }
-        if (CollectionUtils.isEmpty(event.getAddedFiles()) && CollectionUtils.isEmpty(event.getModifiedFiles())) {
+        if (CollectionUtils.isEmpty(event.getFiles())) {
             return;
         }
-        List<String> files = new ArrayList<>();
-        files.addAll(event.getAddedFiles());
-        files.addAll(event.getModifiedFiles());
-        List<String> filesWithPath = files.stream().map(file -> vobPath + file).collect(Collectors.toList());
+        handleAddAndModifyEvent(event);
+        List<String> filesWithPath = event.getFiles().stream().map(file -> vobPath + file).collect(Collectors.toList());
         log.info("Trying to attach branch {} to {} files", branch, filesWithPath.size());
         String attachBranchCommand = ClearCaseCommandBuilder
                 .buildAssignBranchToElementsCommand(viewName, vobPath, branch,

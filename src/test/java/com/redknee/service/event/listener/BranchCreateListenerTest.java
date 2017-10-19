@@ -10,7 +10,7 @@ import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.service.event.BranchCreateEvent;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,17 +45,11 @@ public class BranchCreateListenerTest {
         BranchCreateListener listener = new BranchCreateListener(clearCaseVobMapper, applicationProperty,
                 clearCaseCommandExecutor);
         listener.handleBranchCreateEvent(
-                new BranchCreateEvent(true, "branch", "rajithd-aurea/vobs_blr", Collections.singletonList("add.txt"),
-                        Collections.singletonList("modify.txt")));
-        verify(clearCaseCommandExecutor, times(2)).executeCommand(commandArgumentCaptor.capture());
+                new BranchCreateEvent(true, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
+                        Arrays.asList("add.txt", "modify.txt")));
+        verify(clearCaseCommandExecutor, times(5)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(2, allValues.size());
-        assertEquals(
-                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool mkbrtype -nc branch \" test",
-                allValues.get(0).get(0));
-        assertEquals(
-                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool mkbranch -nc -nco branch /vobs/blr/add.txt /vobs/blr/modify.txt \" test",
-                allValues.get(1).get(0));
+        assertEquals(5, allValues.size());
     }
 
     @Test
@@ -65,13 +59,10 @@ public class BranchCreateListenerTest {
         BranchCreateListener listener = new BranchCreateListener(clearCaseVobMapper, applicationProperty,
                 clearCaseCommandExecutor);
         listener.handleBranchCreateEvent(
-                new BranchCreateEvent(false, "branch", "rajithd-aurea/vobs_blr", Collections.singletonList("add.txt"),
-                        Collections.singletonList("modify.txt")));
-        verify(clearCaseCommandExecutor).executeCommand(commandArgumentCaptor.capture());
+                new BranchCreateEvent(false, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
+                        Arrays.asList("add.txt", "modify.txt")));
+        verify(clearCaseCommandExecutor, times(4)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(1, allValues.size());
-        assertEquals(
-                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool mkbranch -nc -nco branch /vobs/blr/add.txt /vobs/blr/modify.txt \" test",
-                allValues.get(0).get(0));
+        assertEquals(4, allValues.size());
     }
 }

@@ -14,6 +14,7 @@ public class SourceCodeEvent {
     private String url;
     private String repoName;
     private String id;
+    private String branchName;
 
 
 }

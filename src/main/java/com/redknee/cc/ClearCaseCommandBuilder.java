@@ -10,8 +10,6 @@ public class ClearCaseCommandBuilder {
 
     private static final String CHECK_IN_COMMAND = "cd %s && /usr/atria/bin/cleartool ci -c '%s' -ide %s";
 
-    private static final String COPY_FILE_COMMAND = "cp %s %s";
-
     private static final String REMOVE_FILE_COMMAND = "cd %s && /usr/atria/bin/cleartool rm -c '%s' -force %s";
 
     private static final String CREATE_LABEL_COMMAND = "cd %s && /usr/atria/bin/cleartool mklbtype -nc %s";
@@ -34,11 +32,6 @@ public class ClearCaseCommandBuilder {
     public static String buildCheckInCommand(String viewName, String path, String fileName, String message) {
         String checkInCommand = String.format(CHECK_IN_COMMAND, path, message, fileName);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, checkInCommand, viewName);
-    }
-
-    public static String buildCopyCommand(String viewName, String sourceFile, String destinationFile) {
-        String copyCommand = String.format(COPY_FILE_COMMAND, sourceFile, destinationFile);
-        return String.format(CLEAR_TOOL_VIEW_COMMAND, copyCommand, viewName);
     }
 
     public static String buildCreateNewFilesAndDirsCommand(String viewName, String vobPath, String commitMessage,
