@@ -12,10 +12,6 @@ public class ClearCaseCommandBuilder {
 
     private static final String COPY_FILE_COMMAND = "cp %s %s";
 
-    private static final String MK_ELEM_COMMAND = "cd %s && /usr/atria/bin/cleartool mkelem -c '%s' %s";
-
-    private static final String MK_DIR_COMMAND = "cd %s && /usr/atria/bin/cleartool mkdir -c '%s' %s";
-
     private static final String REMOVE_FILE_COMMAND = "/usr/atria/bin/cleartool rmelem -c '%s' -force %s";
 
     private static final String CREATE_LABEL_COMMAND = "cd %s && /usr/atria/bin/cleartool mklbtype -nc %s";
@@ -27,6 +23,8 @@ public class ClearCaseCommandBuilder {
     private static final String CREATE_BRANCH_TYPE_COMMAND = "cd %s && /usr/atria/bin/cleartool mkbrtype -nc %s";
 
     private static final String ASSIGN_BRANCH_TO_ELEMENTS_COMMAND = "cd %s && /usr/atria/bin/cleartool mkbranch -nc -nco %s %s";
+
+    private static final String CREATE_NEW_FILES_AND_DIRS_COMMAND = "cd %s && /usr/atria/bin/clearfsimport -comment '%s' -rec -nset %s .";
 
     public static String buildCheckOutCommand(String viewName, String path, String fileName) {
         String checkoutCommand = String.format(CHECK_OUT_COMMAND, path, fileName);
@@ -43,14 +41,10 @@ public class ClearCaseCommandBuilder {
         return String.format(CLEAR_TOOL_VIEW_COMMAND, copyCommand, viewName);
     }
 
-    public static String buildMakeElementCommand(String viewName, String path, String commitMessage, String fileName) {
-        String makeElementCommand = String.format(MK_ELEM_COMMAND, path, commitMessage, fileName);
-        return String.format(CLEAR_TOOL_VIEW_COMMAND, makeElementCommand, viewName);
-    }
-
-    public static String buildMakeDirCommand(String viewName, String path, String commitMessage, String dirName) {
-        String makeDirCommand = String.format(MK_DIR_COMMAND, path, commitMessage, dirName);
-        return String.format(CLEAR_TOOL_VIEW_COMMAND, makeDirCommand, viewName);
+    public static String buildCreateNewFilesAndDirsCommand(String viewName, String vobPath, String commitMessage,
+            String dirPath) {
+        String command = String.format(CREATE_NEW_FILES_AND_DIRS_COMMAND, vobPath, commitMessage, dirPath);
+        return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
     }
 
     public static String buildRemoveElementCommand(String viewName, String commitMessage,

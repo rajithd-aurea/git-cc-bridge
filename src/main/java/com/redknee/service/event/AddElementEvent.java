@@ -15,6 +15,7 @@ public class AddElementEvent {
     private String repoFullName;
     private String repoName;
     private String repoId;
+    private String deliveryId;
     private String commitMessage;
     private List<String> newFiles;
 

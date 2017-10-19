@@ -23,6 +23,7 @@ public class EventController {
     public void receiveEvent(@RequestBody EventDto event, @RequestHeader("X-GitHub-Delivery") String deliveryId) {
         log.info("========== Receive event ===================");
         log.info("Delivery id {}", deliveryId);
+        event.setDeliveryId(deliveryId);
         eventHandler.handleMessage(event);
     }
 }

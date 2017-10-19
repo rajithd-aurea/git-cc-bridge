@@ -52,15 +52,12 @@ public class EventHandler {
     private void handleBranchCommit(EventDto event) {
         String[] branchSplits = event.getRef().split("/");
         String branch = branchSplits[branchSplits.length - 1];
-        if (event.getDeleted()) {
-            // branch deleted
-        } else {
+        if (!event.getDeleted()) {
             Commit headCommit = event.getHeadCommit();
             publisher.publishEvent(
                     new BranchCreateEvent(event.getCreated(), branch, event.getRepository().getFullName(),
                             headCommit.getAdded(), headCommit.getModified()));
         }
-
     }
 
     private void handleTagCommit(EventDto event) {
@@ -95,7 +92,7 @@ public class EventHandler {
             if (!CollectionUtils.isEmpty(commit.getAdded())) {
                 publisher.publishEvent(
                         new AddElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
-                                attachCommitIdToMessage(commit), commit.getAdded()));
+                                event.getDeliveryId(), attachCommitIdToMessage(commit), commit.getAdded()));
             }
 
             if (!CollectionUtils.isEmpty(commit.getRemoved())) {

@@ -32,6 +32,8 @@ public class EventDto {
     @JsonProperty("head_commit")
     private Commit headCommit;
 
+    private String deliveryId;
+
     @Getter
     @Setter
     public static class Commit {
