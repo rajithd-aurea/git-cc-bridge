@@ -9,7 +9,7 @@ import com.redknee.Application;
 import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
-import com.redknee.service.event.ModifyElementEvent;
+import com.redknee.service.event.AddElementEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class ModifyElementListenerTest {
+public class AddElementListenerTest {
 
     @Autowired
     private ClearCaseVobMapper clearCaseVobMapper;
@@ -44,9 +44,9 @@ public class ModifyElementListenerTest {
         doNothing().when(clearCaseCommandExecutor).executeCommand(Mockito.any());
         doNothing().when(clearCaseCommandExecutor).copyFile(Mockito.anyString(), Mockito.anyString());
 
-        ModifyElementListener modifyElementListener = new ModifyElementListener(applicationProperty,
+        AddElementListener listener = new AddElementListener(applicationProperty,
                 clearCaseCommandExecutor, clearCaseVobMapper);
-        modifyElementListener.handle(new ModifyElementEvent("rajithd-aurea/vobs_blr", "vobs_blr", "123", "1", "commit",
+        listener.handle(new AddElementEvent("rajithd-aurea/vobs_blr", "vobs_blr", "123", "1", "commit",
                 Collections.singletonList("test.txt")));
 
         verify(clearCaseCommandExecutor, times(3)).executeCommand(commandArgumentCaptor.capture());
@@ -63,9 +63,9 @@ public class ModifyElementListenerTest {
         doNothing().when(clearCaseCommandExecutor).executeCommand(Mockito.any());
         doNothing().when(clearCaseCommandExecutor).copyFile(Mockito.anyString(), Mockito.anyString());
 
-        ModifyElementListener modifyElementListener = new ModifyElementListener(applicationProperty,
+        AddElementListener listener = new AddElementListener(applicationProperty,
                 clearCaseCommandExecutor, clearCaseVobMapper);
-        modifyElementListener.handle(new ModifyElementEvent("rajithd-aurea/vobs_blr", "vobs_blr", "123", "1", "commit",
+        listener.handle(new AddElementEvent("rajithd-aurea/vobs_blr", "vobs_blr", "123", "1", "commit",
                 Arrays.asList("text.txt", "test/abc.txt")));
 
         verify(clearCaseCommandExecutor, times(4)).executeCommand(commandArgumentCaptor.capture());

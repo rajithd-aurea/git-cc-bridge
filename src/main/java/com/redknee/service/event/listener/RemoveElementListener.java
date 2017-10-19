@@ -5,40 +5,56 @@ import com.redknee.cc.ClearCaseCommandExecutor;
 import com.redknee.config.ApplicationProperty;
 import com.redknee.config.ClearCaseVobMapper;
 import com.redknee.service.event.RemoveElementEvent;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class RemoveElementListener {
+public class RemoveElementListener extends AbstractListener {
 
-    private final ApplicationProperty applicationProperty;
     private final ClearCaseCommandExecutor clearCaseCommandExecutor;
-    private final ClearCaseVobMapper clearCaseVobMapper;
 
     RemoveElementListener(ApplicationProperty applicationProperty,
             ClearCaseCommandExecutor clearCaseCommandExecutor, ClearCaseVobMapper clearCaseVobMapper) {
-        this.applicationProperty = applicationProperty;
+        super(applicationProperty, clearCaseVobMapper, clearCaseCommandExecutor);
         this.clearCaseCommandExecutor = clearCaseCommandExecutor;
-        this.clearCaseVobMapper = clearCaseVobMapper;
     }
 
     @EventListener
     public void handle(RemoveElementEvent event) {
-        String vobPath = clearCaseVobMapper.getPathMapper().get(event.getRepoFullName());
-        log.info("Found VOB path {}", vobPath);
-        String viewName = applicationProperty.getClearCase().getViewName();
         List<String> removedFiles = event.getRemovedFiles();
         log.info("Trying to remove {} number of files", removedFiles);
+        String vobPath = getVobPath(event.getRepoFullName());
         removedFiles.stream().forEach(file -> {
-            String filePath = vobPath + file;
-            String removeElementCommand = ClearCaseCommandBuilder
-                    .buildRemoveElementCommand(viewName, event.getCommitMessage(), filePath);
-            log.info("Executing remove element command {}", removeElementCommand);
-            clearCaseCommandExecutor.executeCommand(Collections.singletonList(removeElementCommand));
+            String directory = getDirectory(file);
+            String checkOutCommand = ClearCaseCommandBuilder.buildCheckOutCommand(getViewName(), vobPath, directory);
+            log.info("Checkout directory command {}", checkOutCommand);
+            clearCaseCommandExecutor.executeCommand(Collections.singletonList(checkOutCommand));
+
+            String removeCommand = ClearCaseCommandBuilder
+                    .buildRemoveElementCommand(getViewName(), vobPath, event.getCommitMessage(), file);
+            log.info("Remove file command {}", removeCommand);
+            clearCaseCommandExecutor.executeCommand(Collections.singletonList(removeCommand));
+
+            String checkInCommand = ClearCaseCommandBuilder
+                    .buildCheckInCommand(getViewName(), vobPath, directory, event.getCommitMessage());
+            log.info("Checkin directory command {}", checkInCommand);
+            clearCaseCommandExecutor.executeCommand(Collections.singletonList(checkInCommand));
         });
+    }
+
+    private String getDirectory(String file) {
+        String[] fileParts = file.split("/");
+        if (fileParts.length == 1) {
+            return ".";
+        } else {
+            String[] dirs = Arrays.copyOf(fileParts, fileParts.length - 1);
+            return StringUtils.join("/", dirs);
+        }
     }
 }

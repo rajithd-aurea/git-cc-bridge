@@ -47,11 +47,17 @@ public class RemoveElementListenerTest {
         removeElementListener.handle(new RemoveElementEvent("rajithd-aurea/vobs_blr", "vobs_blr", "123", "commit",
                 Collections.singletonList("test.txt")));
 
-        verify(clearCaseCommandExecutor, times(1)).executeCommand(commandArgumentCaptor.capture());
+        verify(clearCaseCommandExecutor, times(3)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(1, allValues.size());
+        assertEquals(3, allValues.size());
         assertEquals(
-                "/usr/atria/bin/cleartool setview -exec \" /usr/atria/bin/cleartool rmelem -c 'commit' -force /vobs/blr/test.txt \" test",
+                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool checkout -reserved -nc . \" test",
                 allValues.get(0).get(0));
+        assertEquals(
+                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool rm -c 'commit' -force test.txt \" test",
+                allValues.get(1).get(0));
+        assertEquals(
+                "/usr/atria/bin/cleartool setview -exec \" cd /vobs/blr/ && /usr/atria/bin/cleartool ci -c 'commit' -ide . \" test",
+                allValues.get(2).get(0));
     }
 }

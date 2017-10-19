@@ -50,6 +50,7 @@ public class EventHandler {
     }
 
     private void handleBranchCommit(EventDto event) {
+        publisher.publishEvent(new ValidationEvent(event));
         String[] branchSplits = event.getRef().split("/");
         String branch = branchSplits[branchSplits.length - 1];
         if (!event.getDeleted()) {
@@ -61,6 +62,7 @@ public class EventHandler {
     }
 
     private void handleTagCommit(EventDto event) {
+        publisher.publishEvent(new ValidationEvent(event));
         String[] tagSplits = event.getRef().split("/");
         String tag = tagSplits[tagSplits.length - 1];
         if (event.getCreated()) {
@@ -80,13 +82,14 @@ public class EventHandler {
         log.info("Event occurred for master branch for repo {}", repository.getUrl());
         publisher.publishEvent(new ValidationEvent(event));
         publisher.publishEvent(new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId()));
+
         List<Commit> commits = event.getCommits();
         for (Commit commit : commits) {
             List<String> modified = commit.getModified();
             if (!CollectionUtils.isEmpty(modified)) {
                 publisher.publishEvent(
                         new ModifyElementEvent(repository.getFullName(), repository.getName(), repository.getId(),
-                                attachCommitIdToMessage(commit), modified));
+                                event.getDeliveryId(), attachCommitIdToMessage(commit), modified));
             }
 
             if (!CollectionUtils.isEmpty(commit.getAdded())) {

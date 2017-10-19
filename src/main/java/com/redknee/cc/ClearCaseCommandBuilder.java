@@ -12,7 +12,7 @@ public class ClearCaseCommandBuilder {
 
     private static final String COPY_FILE_COMMAND = "cp %s %s";
 
-    private static final String REMOVE_FILE_COMMAND = "/usr/atria/bin/cleartool rmelem -c '%s' -force %s";
+    private static final String REMOVE_FILE_COMMAND = "cd %s && /usr/atria/bin/cleartool rm -c '%s' -force %s";
 
     private static final String CREATE_LABEL_COMMAND = "cd %s && /usr/atria/bin/cleartool mklbtype -nc %s";
 
@@ -47,9 +47,9 @@ public class ClearCaseCommandBuilder {
         return String.format(CLEAR_TOOL_VIEW_COMMAND, command, viewName);
     }
 
-    public static String buildRemoveElementCommand(String viewName, String commitMessage,
+    public static String buildRemoveElementCommand(String viewName, String vobPath, String commitMessage,
             String filePath) {
-        String removeCommand = String.format(REMOVE_FILE_COMMAND, commitMessage, filePath);
+        String removeCommand = String.format(REMOVE_FILE_COMMAND, vobPath, commitMessage, filePath);
         return String.format(CLEAR_TOOL_VIEW_COMMAND, removeCommand, viewName);
     }
 
