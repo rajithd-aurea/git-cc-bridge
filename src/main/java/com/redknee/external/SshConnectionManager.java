@@ -5,6 +5,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.redknee.util.Constants;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -72,15 +73,17 @@ public class SshConnectionManager {
 
     }
 
-    public void executeCommands(List<String> commands) {
+    public int executeCommands(List<String> commands) {
         try {
             Channel channel = getShellChannel();
             sendCommands(channel, commands);
-            readChannelOutput(channel);
-            log.info("Finished sending commands!");
+            int exitStatus = readChannelOutput(channel);
+            log.info("Finished sending commands. Exit code is {}", exitStatus);
+            return exitStatus;
         } catch (Exception e) {
             log.error("An error ocurred during executeCommands: " + e);
         }
+        return Constants.ERROR_EXIT_CODE;
     }
 
     public void copyFile(String localFile, String remoteFile) {
@@ -217,7 +220,7 @@ public class SshConnectionManager {
 
     }
 
-    private static void readChannelOutput(Channel channel) {
+    private static int readChannelOutput(Channel channel) {
         byte[] buffer = new byte[1024];
 
         try {
@@ -248,7 +251,7 @@ public class SshConnectionManager {
         } catch (Exception e) {
             log.error("Error while reading channel output: ", e);
         }
-
+        return channel.getExitStatus();
     }
 
     public void close() {

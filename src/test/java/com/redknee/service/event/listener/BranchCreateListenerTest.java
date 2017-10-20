@@ -2,6 +2,7 @@ package com.redknee.service.event.listener;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +41,7 @@ public class BranchCreateListenerTest {
 
     @Test
     public void testHandleBranchCreateEvent() throws Exception {
-        doNothing().when(clearCaseCommandExecutor).executeCommand(Mockito.any());
+        doReturn(0).when(clearCaseCommandExecutor).executeCommand(Mockito.any());
 
         BranchCreateListener listener = new BranchCreateListener(clearCaseVobMapper, applicationProperty,
                 clearCaseCommandExecutor);
@@ -54,7 +55,7 @@ public class BranchCreateListenerTest {
 
     @Test
     public void testHandleBranchCreateEventWithExistingBranch() throws Exception {
-        doNothing().when(clearCaseCommandExecutor).executeCommand(Mockito.any());
+        doReturn(0).when(clearCaseCommandExecutor).executeCommand(Mockito.any());
 
         BranchCreateListener listener = new BranchCreateListener(clearCaseVobMapper, applicationProperty,
                 clearCaseCommandExecutor);

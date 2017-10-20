@@ -12,6 +12,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
@@ -40,6 +41,7 @@ public class GitSourceCodeUpdateListener {
             if (isDirectoryExists(dirPath)) {
                 log.info("Directory exists for repo {} and start pulling from git", sourceCode.getRepoName());
                 Git git = Git.open(new File(dirPath));
+                git.reset().setMode(ResetType.HARD).call();
                 PullCommand pullCommand = git.pull();
                 if (credentials != null) {
                     pullCommand.setCredentialsProvider(credentials);
