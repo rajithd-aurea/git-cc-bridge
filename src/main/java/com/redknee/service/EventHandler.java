@@ -56,8 +56,8 @@ public class EventHandler {
         publisher.publishEvent(new ValidationEvent(event));
         publisher.publishEvent(
                 new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId(), event.getRef()));
-        String[] branchSplits = event.getRef().split("/");
-        String branch = branchSplits[branchSplits.length - 1];
+        String[] branchSplits = event.getRef().split(Constants.BRANCH_REF_STARTS_WITH);
+        String branch = branchSplits[1];
         if (!event.getDeleted()) {
             List<Commit> commits = event.getCommits();
             commits.forEach(commit -> publisher.publishEvent(
@@ -69,8 +69,8 @@ public class EventHandler {
 
     private void handleTagCommit(EventDto event) {
         publisher.publishEvent(new ValidationEvent(event));
-        String[] tagSplits = event.getRef().split("/");
-        String tag = tagSplits[tagSplits.length - 1];
+        String[] tagSplits = event.getRef().split(Constants.TAG_REF_STARTS_WITH);
+        String tag = tagSplits[1];
         if (event.getCreated()) {
             // tag created
             Commit headCommit = event.getHeadCommit();
