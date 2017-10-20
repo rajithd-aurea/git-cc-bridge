@@ -32,6 +32,7 @@ public class EventHandler {
 
     @Async("eventTaskExecutor")
     public void handleMessage(EventDto event) {
+        log.info("========= Starting to process delivery id {} ===============", event.getDeliveryId());
         String ref = event.getRef();
         if (StringUtils.isBlank(ref)) {
             log.warn("Ref is empty. Returning without further processing");
@@ -47,6 +48,7 @@ public class EventHandler {
         } else {
             log.info("Event ref {} is not handled", ref);
         }
+        log.info("=========== Successfully sync delivery id {} ===================", event.getDeliveryId());
     }
 
     private void handleBranchCommit(EventDto event) {
