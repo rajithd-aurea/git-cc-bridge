@@ -56,6 +56,10 @@ public class AbstractListener {
         clearCaseCommandExecutor.executeCommand(Collections.singletonList(clearFsCommand));
 
         //cleanup temp dir
+        cleanupTempDir(remoteDirPath);
+    }
+
+    protected void cleanupTempDir(String remoteDirPath) {
         String cleanUpCommand = LinuxCommandBuilder.buildRemoveDirCommand(remoteDirPath);
         log.info("Cleaning directory {}", cleanUpCommand);
         clearCaseCommandExecutor.executeCommand(Collections.singletonList(cleanUpCommand));

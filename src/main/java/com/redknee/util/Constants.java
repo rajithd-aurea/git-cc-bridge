@@ -9,6 +9,7 @@ public interface Constants {
     String BRANCH_REF_STARTS_WITH = "refs/heads/";
 
     // exit code
+    int SUCCESS_EXIT_CODE = 0;
     int ERROR_EXIT_CODE = 1000;
 
 }
