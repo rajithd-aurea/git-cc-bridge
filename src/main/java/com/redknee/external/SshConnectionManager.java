@@ -162,7 +162,7 @@ public class SshConnectionManager {
 
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Error occur while copying file", e);
             try {
                 if (fis != null) {
                     fis.close();

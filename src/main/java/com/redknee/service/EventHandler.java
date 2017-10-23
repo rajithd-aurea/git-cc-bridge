@@ -44,7 +44,8 @@ public class EventHandler {
         } else if (ref.startsWith(Constants.TAG_REF_STARTS_WITH)) {
             handleTagCommit(event);
         } else if (ref.startsWith(Constants.BRANCH_REF_STARTS_WITH)) {
-            handleBranchCommit(event);
+            // FIXME: handle multiple git commits for cc branch
+//            handleBranchCommit(event);
         } else {
             log.info("Event ref {} is not handled", ref);
         }
@@ -58,7 +59,7 @@ public class EventHandler {
                 new SourceCodeEvent(repository.getUrl(), repository.getName(), repository.getId(), event.getRef()));
         String[] branchSplits = event.getRef().split(Constants.BRANCH_REF_STARTS_WITH);
         String branch = branchSplits[1];
-        if (!event.getDeleted()) {
+        if (event.getCreated()) {
             List<Commit> commits = event.getCommits();
             commits.forEach(commit -> publisher.publishEvent(
                     new BranchCreateEvent(event.getCreated(), branch, repository.getFullName(),

@@ -1,7 +1,6 @@
 package com.redknee.service.event.listener;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,9 +47,9 @@ public class BranchCreateListenerTest {
         listener.handleBranchCreateEvent(
                 new BranchCreateEvent(true, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
                         Collections.singletonList("add.txt"), Collections.singletonList("modify.txt")));
-        verify(clearCaseCommandExecutor, times(9)).executeCommand(commandArgumentCaptor.capture());
+        verify(clearCaseCommandExecutor, times(8)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(9, allValues.size());
+        assertEquals(8, allValues.size());
     }
 
     @Test
@@ -62,8 +61,8 @@ public class BranchCreateListenerTest {
         listener.handleBranchCreateEvent(
                 new BranchCreateEvent(false, "branch", "rajithd-aurea/vobs_blr", "rajithd-aurea", "1", "1", "c",
                         Collections.singletonList("add.txt"), Collections.singletonList("modify.txt")));
-        verify(clearCaseCommandExecutor, times(8)).executeCommand(commandArgumentCaptor.capture());
+        verify(clearCaseCommandExecutor, times(7)).executeCommand(commandArgumentCaptor.capture());
         List<List<String>> allValues = commandArgumentCaptor.getAllValues();
-        assertEquals(8, allValues.size());
+        assertEquals(7, allValues.size());
     }
 }
