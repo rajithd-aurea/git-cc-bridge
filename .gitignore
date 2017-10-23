@@ -26,3 +26,6 @@ nbdist/
 
 # OS Specific
 .DS_Store
+
+# log file
+*.log

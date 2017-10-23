@@ -205,7 +205,7 @@ public class SshConnectionManager {
         return b;
     }
 
-    private static void sendCommands(Channel channel, List<String> commands) {
+    private void sendCommands(Channel channel, List<String> commands) {
         try {
             PrintStream out = new PrintStream(channel.getOutputStream());
 
@@ -220,7 +220,7 @@ public class SshConnectionManager {
 
     }
 
-    private static int readChannelOutput(Channel channel) {
+    private int readChannelOutput(Channel channel) {
         byte[] buffer = new byte[1024];
 
         try {
