@@ -7,13 +7,17 @@ server:
 
 application:
   clear-case:
-    view-name: rdelantha
+    property-file: ${GIT_CC_PATH_MAPPER_FILE}
+    view-name: ${GIT_CC_CLEARCASE_VIEW_NAME}
     server:
-      hostname:
-      username:
-      password:
-      workspace: /tmp/
+      hostname: ${GIT_CC_CLEARCASE_HOSTNAME}
+      username: ${GIT_CC_CLEARCASE_USERNAME}
+      password: ${GIT_CC_CLEARCASE_PASSWORD}
+      workspace: /tmp/git-cc-bridge/
   git-server:
     username:
     password:
-    workspace: /tmp/
+    workspace: /tmp/git-cc-bridge/
+
+logging:
+  file: git-cc-bridge.log

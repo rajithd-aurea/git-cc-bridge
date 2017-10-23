@@ -2,6 +2,7 @@ package com.redknee.service.event.listener;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -39,7 +40,7 @@ public class LabelRemoveListenerTest {
 
     @Test
     public void testHandleLabelRemoveEvent() throws Exception {
-        doNothing().when(clearCaseCommandExecutor).executeCommand(Mockito.any());
+        doReturn(0).when(clearCaseCommandExecutor).executeCommand(Mockito.any());
 
         LabelRemoveListener labelRemoveListener = new LabelRemoveListener(clearCaseVobMapper, applicationProperty,
                 clearCaseCommandExecutor);

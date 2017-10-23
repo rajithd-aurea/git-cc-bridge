@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.bind.PropertiesConfigurationFactory;
 import org.springframework.boot.env.PropertySourcesLoader;
 import org.springframework.context.ResourceLoaderAware;
@@ -19,11 +20,14 @@ import org.springframework.util.ClassUtils;
 @Configuration
 public class ApplicationExternalPropertyConfig implements ResourceLoaderAware {
 
+    @Value("${application.clear-case.property-file}")
+    private String vobLocation;
+
     private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
     @Bean
     public ClearCaseVobMapper clearCaseVobMapper() {
-        return bindPropertiesToTarget(ClearCaseVobMapper.class, "clearcase", "classpath:clearcase-vob-mapper.yml");
+        return bindPropertiesToTarget(ClearCaseVobMapper.class, "clearcase", vobLocation);
     }
 
     private <T> T bindPropertiesToTarget(Class<T> clazz, String prefix, String... locations) {

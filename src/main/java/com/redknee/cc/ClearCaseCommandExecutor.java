@@ -15,12 +15,13 @@ public class ClearCaseCommandExecutor {
         this.applicationProperty = applicationProperty;
     }
 
-    public void executeCommand(List<String> commands) {
+    public int executeCommand(List<String> commands) {
         Server server = applicationProperty.getClearCase().getServer();
         SshConnectionManager sshConnectionManager = new SshConnectionManager(server.getUsername(), server.getPassword(),
                 server.getHostname());
-        sshConnectionManager.executeCommands(commands);
+        int exitCode = sshConnectionManager.executeCommands(commands);
         sshConnectionManager.close();
+        return exitCode;
     }
 
     public void copyFile(String sourceFile, String destinationFile) {
